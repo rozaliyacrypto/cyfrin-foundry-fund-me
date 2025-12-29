@@ -27,10 +27,7 @@ contract FundMe {
 
     // allows users to send money to the contract
     function fund() public payable {
-        require(
-            msg.value.getConversionRate(s_priceFeed) >= MIN_USD,
-            "not enough amount of ETH"
-        );
+        require(msg.value.getConversionRate(s_priceFeed) >= MIN_USD, "not enough amount of ETH");
         s_funders.push(msg.sender);
         s_addressToAmountFunded[msg.sender] += msg.value;
     }
@@ -43,9 +40,7 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0; // mapping
         }
         s_funders = new address[](0); // new array with 0 length
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
+        (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
         require(success, "call failed");
     }
 
@@ -55,9 +50,7 @@ contract FundMe {
             s_addressToAmountFunded[funder] = 0; // rest all the values to 0 cause of withdrawing funds
         }
         s_funders = new address[](0);
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
+        (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
         require(success, "call failed");
     }
 
@@ -74,9 +67,7 @@ contract FundMe {
         return s_priceFeed.version();
     }
 
-    function getAddressToAmountFunded(
-        address fundingAddress
-    ) external view returns (uint256) {
+    function getAddressToAmountFunded(address fundingAddress) external view returns (uint256) {
         return s_addressToAmountFunded[fundingAddress];
     }
 
